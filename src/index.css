@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Custom brand color utilities for forms and buttons */
+.text-brand-primary {
+  color: #3b82f6 !important;
+}
+.text-brand-secondary {
+  color: #8b5cf6 !important;
+}
+.bg-brand-primary {
+  background-color: #3b82f6 !important;
+}
+.bg-brand-secondary {
+  background-color: #8b5cf6 !important;
+}
+.hover\:bg-brand-secondary:hover {
+  background-color: #8b5cf6 !important;
+}
+/* Global styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Reset basic elements */
+* {
+  box-sizing: border-box;
+}
+
+/* Base styles */
+html, body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+body[data-theme='dark'] {
+  background: #18181b;
+  color: #f3f4f6;
+}
+
+body[data-theme='dark'] .landing-card {
+  background: #23232a !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #33354d !important;
+}
+body[data-theme='dark'] .landing-title {
+  color: #60a5fa !important;
+}
+body[data-theme='dark'] .landing-container {
+  background: none !important;
+}

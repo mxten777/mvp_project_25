@@ -1,0 +1,327 @@
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
+
+// 통일된 스타일의 SVG 아이콘
+const nav = [
+  { 
+    to: '/dashboard', 
+    label: '대시보드',
+    icon: 'M4 7l8-4 8 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7z'
+  },
+  { 
+    to: '/requests', 
+    label: '케어요청',
+    icon: 'M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z' 
+  },
+  { 
+    to: '/caregivers', 
+    label: '요양보호사',
+    icon: 'M4 19v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2 M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z' 
+  },
+  { 
+    to: '/org', 
+    label: '기관관리',
+    icon: 'M4 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16H4V4z' 
+  },
+];
+
+export default function Layout() {
+  // PC인지 모바일인지 구분하는 상태 (768px 기준)
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const isMobile = width < 768;
+  
+  // 사이드바 표시 여부 (PC에서는 항상 true, 모바일에서는 토글 가능)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, role, logout, loading } = useAuth();
+  
+  // 화면 크기 변경 감지
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+    
+    // 초기화 및 이벤트 리스너 등록
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // 모바일일 때만 스크롤 처리
+  useEffect(() => {
+    if (isMobile && sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isMobile, sidebarOpen]);
+  
+  // 다크모드 상태를 localStorage에 저장/불러오기
+  const [dark, setDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+  
+  const toggleDark = () => {
+    setDark((d) => {
+      document.documentElement.classList.toggle('dark', !d);
+      localStorage.setItem('theme', !d ? 'dark' : 'light');
+      return !d;
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-800 flex">
+      {/* TEST-CODE-FLAG: 테스트 코드 반영 확인용 */}
+      {/* PC 전용 사이드바 - 768px 이상에서만 표시 */}
+      {!isMobile && (
+        <aside
+          className="w-56 bg-gradient-to-b from-indigo-700 to-indigo-900 dark:from-gray-800 dark:to-gray-900 shadow-lg flex flex-col"
+          aria-label="데스크톱 사이드바 네비게이션"
+        >
+          <div className="px-4 py-6 flex items-center justify-start border-b border-white/20">
+            <div className="w-10 h-10 flex items-center justify-center bg-white/20 rounded-md mr-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-white">보살핌</h2>
+          </div>
+          {/* TEST-PC-SIDEBAR-FLAG-2023 */}
+          <nav className="px-4 py-10 mt-10 flex-1">
+            {nav.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`
+                  flex items-center py-8 px-7 rounded-md mb-12 text-lg font-medium transition-all duration-200
+                  ${location.pathname.startsWith(item.to)
+                    ? 'bg-white/20 text-white font-semibold'
+                    : 'text-white/85 hover:bg-white/10 hover:text-white'}
+                `}
+              >
+                <svg 
+                  className="w-10 h-10 mr-6 flex-shrink-0" 
+                  fill="none" 
+                  stroke={item.to === '/dashboard' ? '#6d28d9' : '#1d4ed8'} 
+                  viewBox="0 0 24 24" 
+                  strokeWidth="1.75"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                </svg>
+                <span className="text-xl">{item.label}</span>
+              </Link>
+            ))}
+          </nav>
+          <div className="p-6 border-t border-white/20">
+            <div className="flex items-center justify-center">
+              <span className="text-sm text-white/70">© 2025 보살핌</span>
+            </div>
+          </div>
+        </aside>
+      )}
+      
+      {/* 모바일 전용 사이드바 - 768px 미만에서만 표시 */}
+      {isMobile && (
+        <aside
+          className={`
+            fixed top-24 bottom-0 left-0 w-20 z-40
+            bg-gradient-to-b from-indigo-700 to-indigo-900 dark:from-gray-800 dark:to-gray-900
+            transition-transform duration-300 shadow-lg
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          `}
+          aria-label="모바일 사이드바 네비게이션"
+        >
+          <div className="px-2 py-3 flex justify-end items-center">
+            <button 
+              className="p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white transition-all" 
+              onClick={() => setSidebarOpen(false)}
+              aria-label="사이드바 닫기"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6L6 18M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <nav className="px-2 py-2 flex-col">
+            {nav.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`
+                  flex items-center justify-center py-3 px-3 rounded-md mb-4 text-sm font-medium transition-all duration-200
+                  ${location.pathname.startsWith(item.to)
+                    ? 'bg-white/20 text-white font-semibold'
+                    : 'text-white/85 hover:bg-white/10 hover:text-white'}
+                `}
+                onClick={() => setSidebarOpen(false)}
+                tabIndex={0}
+                title={item.label}
+                aria-label={item.label}
+              >
+                <svg 
+                  className="w-7 h-7 flex-shrink-0" 
+                  fill="none" 
+                  stroke={item.to === '/dashboard' ? '#6d28d9' : '#1d4ed8'} 
+                  viewBox="0 0 24 24" 
+                  strokeWidth="1.75"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                </svg>
+                <span className="sr-only">{item.label}</span>
+              </Link>
+            ))}
+          </nav>
+          <div className="p-4 mt-auto border-t border-white/20">
+            <div className="flex items-center justify-center">
+              <span className="text-xs text-white/70">© 2025</span>
+            </div>
+          </div>
+        </aside>
+      )}
+      
+      {/* Overlay for mobile - only show on mobile when sidebar is open */}
+      {isMobile && (
+        <div 
+          className={`fixed top-24 left-0 right-0 bottom-0 z-20 bg-black/60 backdrop-blur-[4px] transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          onClick={() => setSidebarOpen(false)}
+          aria-label="사이드바 닫기 오버레이"
+          tabIndex={-1}
+        />
+      )}
+      
+      {/* Main */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Header - TEST-FLAG-HEADER-2023 */}
+        <header className="sticky top-0 z-10 bg-white dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 shadow-sm bg-white/95 dark:bg-gray-700/95 h-24">
+          <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+            {/* 왼쪽 영역: 햄버거 메뉴 */}
+            <div className="w-20 flex items-center">
+              {/* 햄버거 버튼은 모바일 화면에서만 표시 */}
+              {isMobile && (
+                <button
+                  className="p-3 rounded-md text-indigo-600 dark:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-600/50 transition-colors"
+                  onClick={() => setSidebarOpen(true)}
+                  aria-label="사이드바 열기"
+                >
+                  <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                  </svg>
+                </button>
+              )}
+            </div>
+            
+            {/* 중앙 영역: 타이틀 */}
+            <div className="flex-1 flex justify-center items-center">
+              {isMobile ? (
+                <div className="flex items-center">
+                  <div className="w-12 h-12 flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 rounded-md mr-5">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600 dark:text-indigo-300">
+                      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                      <path d="M2 17l10 5 10-5"></path>
+                      <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                  </div>
+                  <div className="text-lg font-medium text-gray-800 dark:text-gray-200">
+                    {/* 현재 경로에 기반한 페이지 타이틀 */}
+                    {location.pathname.includes('/dashboard') && '대시보드'}
+                    {location.pathname.includes('/requests') && '케어요청'}
+                    {location.pathname.includes('/caregivers') && '요양보호사'}
+                    {location.pathname.includes('/org') && '기관관리'}
+                    {!location.pathname.includes('/dashboard') && !location.pathname.includes('/requests') && 
+                     !location.pathname.includes('/caregivers') && !location.pathname.includes('/org') && '보살핌'}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-xl font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                  <div className="w-12 h-12 flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 rounded-md mr-5">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600 dark:text-indigo-300">
+                      <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                      <path d="M2 17l10 5 10-5"></path>
+                      <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                  </div>
+                  {/* 현재 경로에 기반한 페이지 타이틀 */}
+                  {location.pathname.includes('/dashboard') && '대시보드'}
+                  {location.pathname.includes('/requests') && '케어요청'}
+                  {location.pathname.includes('/caregivers') && '요양보호사'}
+                  {location.pathname.includes('/org') && '기관관리'}
+                  {!location.pathname.includes('/dashboard') && !location.pathname.includes('/requests') && 
+                   !location.pathname.includes('/caregivers') && !location.pathname.includes('/org') && '보살핌'}
+                </div>
+              )}
+            </div>
+            
+            {/* 오른쪽 영역: 사용자 정보/설정 */}
+            <div className="w-auto flex items-center gap-5 md:gap-6">
+              {user ? (
+                <div className="flex items-center gap-5 md:gap-6">
+                  <div className="hidden md:flex items-center gap-5">
+                    <div className="h-12 w-12 rounded-full bg-indigo-100 dark:bg-gray-700 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-base font-medium">
+                      {user.email.substring(0, 1).toUpperCase()}
+                    </div>
+                    <span className="text-base text-gray-700 dark:text-gray-300">
+                      {user.email} <span className="ml-2 px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded text-sm font-medium">{role}</span>
+                    </span>
+                  </div>
+                  <button
+                    className="px-5 md:px-6 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:bg-red-900/20 dark:hover:bg-red-900/30 dark:text-red-400 rounded-md text-base font-medium transition-colors"
+                    onClick={async () => { await logout(); navigate('/signin'); }}
+                    disabled={loading}
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Link to="/signin" className="text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium mx-3">로그인</Link>
+                  <Link to="/signup" className="text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium">회원가입</Link>
+                </>
+              )}
+              <button
+                className="p-3 md:p-4 rounded-md bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 transition-colors"
+                onClick={toggleDark}
+                aria-label="다크모드 토글"
+              >
+                <span className="text-lg md:text-xl">{dark ? '🌙' : '☀️'}</span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <main className="flex-1 p-4 md:p-6 w-full bg-gray-50 dark:bg-gray-900">
+          <Outlet />
+        </main>
+      </div>
+      <Toaster position="bottom-right" toastOptions={{
+        className: 'rounded-md shadow-md p-3',
+        duration: 3000,
+        style: {
+          background: dark ? '#1f2937' : '#ffffff',
+          color: dark ? '#f3f4f6' : '#1f2937',
+          border: dark ? '1px solid #374151' : '1px solid #e5e7eb',
+        },
+        success: {
+          iconTheme: {
+            primary: '#10b981',
+            secondary: 'white',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#ef4444',
+            secondary: 'white',
+          },
+        }
+      }} />
+    </div>
+  );
+}
