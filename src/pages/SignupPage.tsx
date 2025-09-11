@@ -1,10 +1,12 @@
 
+
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
+import LandingLayout from '../components/LandingLayout';
 
 export default function SignupPage() {
   const { register, loading } = useAuth();
@@ -26,8 +28,8 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white p-4 sm:p-6">
-      <div className="w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(59,130,246,0.10)] p-5 sm:p-9 flex flex-col items-center relative border border-gray-200">
+    <LandingLayout>
+      <div className="w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(59,130,246,0.10)] p-5 sm:p-9 flex flex-col items-center relative border border-gray-200 mx-auto">
         {loading && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-[16px]">
             <Spinner />
@@ -75,6 +77,6 @@ export default function SignupPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </LandingLayout>
   );
 }

@@ -50,17 +50,7 @@ function NotFound() {
   );
 }
 
-// =====================
-// Error Boundary Fallback
-function ErrorFallback({ error }: { error: any }) {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-100 via-white to-purple-100 px-4">
-      <h1 className="text-3xl font-bold text-red-600 mb-4">에러 발생</h1>
-      <pre className="text-gray-700 bg-white rounded p-4 shadow max-w-xl overflow-x-auto mb-6">{error?.message || String(error)}</pre>
-      <Button variant="primary" size="md" onClick={() => window.location.href = '/'}>홈으로 이동</Button>
-    </div>
-  );
-}
+
 
 // =====================
 // Landing Page

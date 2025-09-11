@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, spacing, fontSizes, radii } from '../../theme';
+// import { colors, spacing, fontSizes, radii } from '../../theme';
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;

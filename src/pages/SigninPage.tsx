@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../components/common/Toast';
 import { Spinner } from '../components/Spinner';
-import Layout from '../components/Layout';
+import LandingLayout from '../components/LandingLayout';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 
@@ -44,9 +44,8 @@ export default function SigninPage() {
   };
 
   return (
-    <Layout>
-      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white p-4 sm:p-6">
-        <div className="w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(59,130,246,0.10)] p-5 sm:p-9 flex flex-col items-center relative border border-gray-200 overflow-x-hidden">
+    <LandingLayout>
+      <div className="w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(59,130,246,0.10)] p-5 sm:p-9 flex flex-col items-center relative border border-gray-200 mx-auto">
           {loading && (
             <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-[16px]">
               <Spinner />
@@ -111,8 +110,7 @@ export default function SigninPage() {
               회원가입
             </Link>
           </div>
-        </div>
       </div>
-    </Layout>
+    </LandingLayout>
   );
 }
