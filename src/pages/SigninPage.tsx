@@ -45,15 +45,15 @@ export default function SigninPage() {
 
   return (
     <LandingLayout>
-      <div className="w-full max-w-sm sm:max-w-md bg-white rounded-2xl shadow-[0_8px_32px_0_rgba(59,130,246,0.10)] p-5 sm:p-9 flex flex-col items-center relative border border-gray-200 mx-auto">
+  <div className="w-full max-w-[95vw] sm:max-w-md bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_32px_0_rgba(59,130,246,0.10)] p-4 sm:p-9 flex flex-col items-center relative border border-gray-200 mx-auto">
           {loading && (
             <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-[16px]">
               <Spinner />
             </div>
           )}
-          <h2 className="text-2xl sm:text-[28px] font-extrabold mb-2 sm:mb-2 text-blue-500 text-center tracking-tight leading-tight">로그인</h2>
-          <p className="mb-5 sm:mb-6 text-gray-500 text-center text-base sm:text-[16px]">이메일과 비밀번호로 로그인하거나, 게스트로 둘러볼 수 있습니다.</p>
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3 sm:gap-4 mt-2">
+          <h2 className="text-xl sm:text-[28px] font-extrabold mb-2 sm:mb-2 text-blue-500 text-center tracking-tight leading-tight">로그인</h2>
+          <p className="mb-4 sm:mb-6 text-gray-500 text-center text-[15px] sm:text-[16px]">이메일과 비밀번호로 로그인하거나, 게스트로 둘러볼 수 있습니다.</p>
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2 sm:gap-4 mt-2">
             <Input
               type="email"
               placeholder="이메일"
@@ -74,12 +74,12 @@ export default function SigninPage() {
               error={error && !email ? error : undefined}
             />
             {error && <div className="text-red-500 text-[13px] sm:text-[14px] text-center mt-1">{error}</div>}
-            <button type="submit" disabled={loading} className="mt-2 sm:mt-3 w-full h-11 sm:h-12 text-base sm:text-[18px] font-bold rounded-[10px] bg-blue-500 text-white border-none cursor-pointer shadow-[0_2px_8px_0_rgba(59,130,246,0.10)] transition-colors hover:bg-blue-600 disabled:opacity-60">
+            <button type="submit" disabled={loading} className="mt-2 sm:mt-3 w-full h-11 sm:h-12 text-[15px] sm:text-[18px] font-bold rounded-[10px] bg-blue-500 text-white border-none cursor-pointer shadow-[0_2px_8px_0_rgba(59,130,246,0.10)] transition-colors hover:bg-blue-600 disabled:opacity-60">
               {loading ? '로그인 중...' : '로그인'}
             </button>
             <button
               type="button"
-              className="mt-2 w-full h-10 sm:h-11 text-[15px] sm:text-[16px] font-semibold rounded-[10px] bg-indigo-100 text-blue-700 border-none cursor-pointer flex items-center justify-center shadow-[0_1px_2px_0_rgba(59,130,246,0.04)] hover:bg-indigo-200"
+              className="mt-2 w-full h-10 sm:h-11 text-[14px] sm:text-[16px] font-semibold rounded-[10px] bg-indigo-100 text-blue-700 border-none cursor-pointer flex items-center justify-center shadow-[0_1px_2px_0_rgba(59,130,246,0.04)] hover:bg-indigo-200"
               onClick={async () => {
                 try {
                   await login('guest@guest.com', 'guest');
@@ -99,12 +99,12 @@ export default function SigninPage() {
           <Button
             variant="secondary"
             size="md"
-            className="w-full mt-3 h-11 sm:h-12 text-base sm:text-[16px]"
+            className="w-full mt-3 h-10 sm:h-12 text-[14px] sm:text-[16px]"
             onClick={() => navigate('/')}
           >
             홈으로
           </Button>
-          <div className="text-center mt-5 sm:mt-6 text-[13px] sm:text-[14px] text-gray-500">
+          <div className="text-center mt-4 sm:mt-6 text-[12px] sm:text-[14px] text-gray-500">
             아직 계정이 없으신가요?{' '}
             <Link to="/signup" className="text-blue-600 underline font-semibold hover:text-blue-800 ml-1">
               회원가입

@@ -133,9 +133,9 @@ export default function DashboardPage() {
   };
 
   return (
-    <main role="main" aria-label="대시보드 메인 영역" className="bg-gray-100 min-h-screen py-6 px-4">
-  <section aria-labelledby="dashboard-title" className="max-w-sm md:max-w-3xl mx-auto w-full overflow-x-hidden">
-        <h2 id="dashboard-title" className="text-[26px] font-extrabold mb-6 text-blue-500 text-center tracking-tight leading-tight">대시보드</h2>
+    <main role="main" aria-label="대시보드 메인 영역" className="bg-gray-100 min-h-screen py-4 px-2 sm:py-8 sm:px-4">
+  <section aria-labelledby="dashboard-title" className="w-full max-w-full sm:max-w-2xl md:max-w-3xl mx-auto overflow-x-hidden flex flex-col gap-6">
+  <h2 id="dashboard-title" className="text-[22px] sm:text-[26px] font-extrabold mb-4 sm:mb-6 text-blue-500 text-center tracking-tight leading-tight">대시보드</h2>
         {/* 로딩/에러/empty UX */}
         {loading ? (
           <div className="flex justify-center items-center min-h-[180px]">
@@ -277,24 +277,24 @@ export default function DashboardPage() {
           </div>
         )}
         </div>
-        <section aria-label="알림 목록" className="bg-white rounded-[24px] shadow-[0_6px_32px_0_rgba(59,130,246,0.10)] p-8 mb-10 border border-gray-200">
-          <div className="font-bold mb-4 text-[17px] text-gray-700">알림</div>
+  <section aria-label="알림 목록" className="bg-white rounded-[18px] sm:rounded-[24px] shadow-[0_6px_32px_0_rgba(59,130,246,0.10)] p-4 sm:p-8 mb-6 sm:mb-10 border border-gray-200">
+          <div className="font-bold mb-3 sm:mb-4 text-[16px] sm:text-[17px] text-gray-700">알림</div>
           {notifications.length === 0 ? (
             <div className="text-gray-500 text-[15px]">알림이 없습니다.</div>
           ) : (
-            <ul className="list-none p-0 m-0 flex flex-col gap-3">
+            <ul className="list-none p-0 m-0 flex flex-col gap-2 sm:gap-3">
               {notifications.map((n) => (
                 <li
                   key={n.id}
-                  className={`flex items-center gap-3 py-3 px-4 rounded-[14px] cursor-pointer border-l-4 ${n.read ? 'border-gray-200 bg-gray-100 opacity-70' : 'border-blue-500 bg-indigo-50'} relative min-h-[56px] shadow-sm`}
+                  className={`flex items-center gap-2 sm:gap-3 py-2 sm:py-3 px-2 sm:px-4 rounded-[10px] sm:rounded-[14px] cursor-pointer border-l-4 ${n.read ? 'border-gray-200 bg-gray-100 opacity-70' : 'border-blue-500 bg-indigo-50'} relative min-h-[48px] sm:min-h-[56px] shadow-sm`}
                   onClick={() => handleNotificationClick(n)}
                   aria-label={`알림: ${n.message}`}
                 >
                   {!n.read && <span className="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2 inline-block flex-shrink-0" aria-hidden="true"></span>}
-                  <span className="text-xs font-bold text-blue-700 min-w-[90px] text-right mr-3 flex-shrink-0">{n.date}</span>
-                  <span className="text-[16px] text-gray-900 flex-1 break-all">{n.message}</span>
+                  <span className="text-xs font-bold text-blue-700 min-w-[72px] sm:min-w-[90px] text-right mr-2 sm:mr-3 flex-shrink-0">{n.date}</span>
+                  <span className="text-[15px] sm:text-[16px] text-gray-900 flex-1 break-words text-left whitespace-pre-line writing-normal" style={{ writingMode: 'horizontal-tb' }}>{n.message}</span>
                   <button
-                    className="absolute top-2.5 right-3 text-gray-400 bg-none border-none text-[18px] cursor-pointer p-0 leading-none font-bold hover:text-red-500 transition-colors"
+                    className="absolute top-2 right-2 sm:top-2.5 sm:right-3 text-gray-400 bg-none border-none text-[18px] cursor-pointer p-0 leading-none font-bold hover:text-red-500 transition-colors"
                     title="알림 삭제"
                     onClick={e => { e.stopPropagation(); removeNotification(n.id); }}
                     aria-label="알림 삭제"
@@ -305,7 +305,7 @@ export default function DashboardPage() {
               ))}
             </ul>
           )}
-          <div className={`mt-5 flex gap-${isMobile ? '2' : '3'} justify-end`}>
+          <div className={`mt-4 sm:mt-5 flex gap-2 sm:gap-3 justify-end`}>
             <button type="button" onClick={markAllRead} className="bg-gray-100 text-gray-900 rounded-[10px] px-6 py-2 font-bold text-[15px] shadow-sm min-w-[120px] hover:bg-blue-100 transition-colors">알림 모두 읽음</button>
             <button type="button" onClick={clearNotifications} className="bg-gray-200 text-gray-900 rounded-[10px] px-6 py-2 font-bold text-[15px] shadow-sm min-w-[120px] hover:bg-red-100 transition-colors">알림 모두 지우기</button>
           </div>
@@ -332,12 +332,12 @@ export default function DashboardPage() {
             />
           )}
         </section>
-        <section aria-label="주요 지표" className="bg-white rounded-[24px] shadow-[0_6px_32px_0_rgba(59,130,246,0.10)] p-8 border border-gray-200">
-          <div className="font-bold mb-4 text-[17px] text-gray-700">주요 지표</div>
-          <div className="grid grid-cols-2 gap-6 justify-items-center items-center mt-2">
+        <section aria-label="주요 지표" className="bg-white rounded-[18px] sm:rounded-[24px] shadow-[0_6px_32px_0_rgba(59,130,246,0.10)] p-4 sm:p-8 border border-gray-200">
+          <div className="font-bold mb-3 sm:mb-4 text-[16px] sm:text-[17px] text-gray-700">주요 지표</div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 justify-items-center items-center mt-1 sm:mt-2">
             <div className="flex flex-col items-center">
-              <span className="text-[22px] font-bold text-blue-500 mb-1">{mockRequests.length}</span>
-              <span className="text-[15px] text-gray-500">전체 요청</span>
+              <span className="text-[18px] sm:text-[22px] font-bold text-blue-500 mb-0.5">{mockRequests.length}</span>
+              <span className="text-[13px] sm:text-[15px] text-gray-500">전체 요청</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="text-[22px] font-bold text-blue-500 mb-1">{mockRequests.filter((r) => r.status === 'open').length}</span>
